@@ -1,0 +1,14 @@
+C:\Kinematiq\PROJETS\RHINOSLIC3R\RhinoSlic3r\RhinoSlic3r\bin\RhinoSlic3r.dll
+C:\Kinematiq\PROJETS\RHINOSLIC3R\RhinoSlic3r\RhinoSlic3r\bin\RhinoSlic3r.pdb
+C:\Kinematiq\PROJETS\RHINOSLIC3R\RhinoSlic3r\RhinoSlic3r\obj\Debug64\RhinoSlic3r.csprojResolveAssemblyReference.cache
+C:\Kinematiq\PROJETS\RHINOSLIC3R\RhinoSlic3r\RhinoSlic3r\obj\Debug64\RhinoSlic3r.dll
+C:\Kinematiq\PROJETS\RHINOSLIC3R\RhinoSlic3r\RhinoSlic3r\obj\Debug64\RhinoSlic3r.pdb
+C:\Kinematiq\PROJETS\RHINOSLIC3R\V0\RhinoSlic3r\bin\RhinoSlic3r.dll
+C:\Kinematiq\PROJETS\RHINOSLIC3R\V0\RhinoSlic3r\bin\RhinoSlic3r.pdb
+C:\Kinematiq\PROJETS\RHINOSLIC3R\V0\RhinoSlic3r\obj\Debug64\RhinoSlic3r.csprojResolveAssemblyReference.cache
+C:\Kinematiq\PROJETS\RHINOSLIC3R\V0\RhinoSlic3r\obj\Debug64\RhinoSlic3r.dll
+C:\Kinematiq\PROJETS\RHINOSLIC3R\V0\RhinoSlic3r\obj\Debug64\RhinoSlic3r.pdb
+C:\Kinematiq\PROJETS\RHINOSLIC3R\V0\RhinoSlic3r\obj\Debug64\RhinoSlic3r.RhinoSlic3rUserControl.resources
+C:\Kinematiq\PROJETS\RHINOSLIC3R\V0\RhinoSlic3r\obj\Debug64\RhinoSlic3r.csproj.GenerateResource.Cache
+C:\Kinematiq\PROJETS\RHINOSLIC3R\V0\RhinoSlic3r\obj\Debug64\RhinoSlic3r.Properties.Resources.resources
+C:\Kinematiq\PROJETS\RHINOSLIC3R\V0\RhinoSlic3r\bin\RhinoSlic3r.dll.config

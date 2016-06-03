@@ -1,0 +1,30 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RhinoSlic3r.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Layer_height" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">0.3</Value>
+    </Setting>
+    <Setting Name="PrintSettings" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Select</Value>
+    </Setting>
+    <Setting Name="Support" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="InfillDensity" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="InfillPattern" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Honeycomb</Value>
+    </Setting>
+    <Setting Name="SolidInfillPattern" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Rectilinear</Value>
+    </Setting>
+    <Setting Name="Vase" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Gcodedir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Kinematiq\RhinoSlic3r\Temp</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
