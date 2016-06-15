@@ -78,7 +78,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.OpenSlic3rButton.Location = new System.Drawing.Point(7, 34);
             this.OpenSlic3rButton.Name = "OpenSlic3rButton";
-            this.OpenSlic3rButton.Size = new System.Drawing.Size(389, 27);
+            this.OpenSlic3rButton.Size = new System.Drawing.Size(390, 27);
             this.OpenSlic3rButton.TabIndex = 3;
             this.OpenSlic3rButton.Text = "Open Slic3r for advance parameters";
             this.OpenSlic3rButton.UseVisualStyleBackColor = true;
@@ -97,7 +97,7 @@
             // 
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(157, 64);
+            this.label5.Location = new System.Drawing.Point(158, 64);
             this.label5.MinimumSize = new System.Drawing.Size(30, 17);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(30, 17);
@@ -146,14 +146,14 @@
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(4, 274);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(378, 17);
+            this.label10.Size = new System.Drawing.Size(247, 17);
             this.label10.TabIndex = 21;
-            this.label10.Text = "RhinoSlic3r V0.1 Slic3r V1.2.9 See Slic3r at: www.slic3r.org";
+            this.label10.Text = "RhinoSlic3r V0.2.0 using Slic3r V1.2.9";
             // 
             // OpenGcodeButton
             // 
             this.OpenGcodeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.OpenGcodeButton.Location = new System.Drawing.Point(206, 188);
+            this.OpenGcodeButton.Location = new System.Drawing.Point(207, 188);
             this.OpenGcodeButton.Name = "OpenGcodeButton";
             this.OpenGcodeButton.Size = new System.Drawing.Size(190, 30);
             this.OpenGcodeButton.TabIndex = 25;
@@ -165,7 +165,7 @@
             // 
             this.InfillDensityUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.InfillDensityUpDown.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::RhinoSlic3r.Properties.Settings.Default, "InfillDensity", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.InfillDensityUpDown.Location = new System.Drawing.Point(343, 94);
+            this.InfillDensityUpDown.Location = new System.Drawing.Point(344, 94);
             this.InfillDensityUpDown.Name = "InfillDensityUpDown";
             this.InfillDensityUpDown.Size = new System.Drawing.Size(50, 22);
             this.InfillDensityUpDown.TabIndex = 24;
@@ -177,7 +177,7 @@
             this.VaseProfilcheckBox.AutoSize = true;
             this.VaseProfilcheckBox.Checked = global::RhinoSlic3r.Properties.Settings.Default.Vase;
             this.VaseProfilcheckBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::RhinoSlic3r.Properties.Settings.Default, "Vase", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.VaseProfilcheckBox.Location = new System.Drawing.Point(296, 64);
+            this.VaseProfilcheckBox.Location = new System.Drawing.Point(297, 64);
             this.VaseProfilcheckBox.Name = "VaseProfilcheckBox";
             this.VaseProfilcheckBox.Size = new System.Drawing.Size(97, 21);
             this.VaseProfilcheckBox.TabIndex = 23;
@@ -203,7 +203,7 @@
             131072});
             this.LayerHeightNumericUpDown.MinimumSize = new System.Drawing.Size(60, 0);
             this.LayerHeightNumericUpDown.Name = "LayerHeightNumericUpDown";
-            this.LayerHeightNumericUpDown.Size = new System.Drawing.Size(60, 22);
+            this.LayerHeightNumericUpDown.Size = new System.Drawing.Size(61, 22);
             this.LayerHeightNumericUpDown.TabIndex = 22;
             this.LayerHeightNumericUpDown.Value = global::RhinoSlic3r.Properties.Settings.Default.Layer_height;
             // 
@@ -221,7 +221,7 @@
             "Octagram Spiral"});
             this.SolidInfillPatternComboBox.Location = new System.Drawing.Point(131, 158);
             this.SolidInfillPatternComboBox.Name = "SolidInfillPatternComboBox";
-            this.SolidInfillPatternComboBox.Size = new System.Drawing.Size(265, 24);
+            this.SolidInfillPatternComboBox.Size = new System.Drawing.Size(266, 24);
             this.SolidInfillPatternComboBox.TabIndex = 20;
             this.SolidInfillPatternComboBox.Text = global::RhinoSlic3r.Properties.Settings.Default.SolidInfillPattern;
             // 
@@ -242,7 +242,7 @@
             "Octagram Spiral"});
             this.InfillPatternComboBox.Location = new System.Drawing.Point(131, 128);
             this.InfillPatternComboBox.Name = "InfillPatternComboBox";
-            this.InfillPatternComboBox.Size = new System.Drawing.Size(265, 24);
+            this.InfillPatternComboBox.Size = new System.Drawing.Size(266, 24);
             this.InfillPatternComboBox.TabIndex = 19;
             this.InfillPatternComboBox.Text = global::RhinoSlic3r.Properties.Settings.Default.InfillPattern;
             // 
@@ -255,7 +255,7 @@
             this.InfillDensityTrackBar.Location = new System.Drawing.Point(96, 92);
             this.InfillDensityTrackBar.Maximum = 100;
             this.InfillDensityTrackBar.Name = "InfillDensityTrackBar";
-            this.InfillDensityTrackBar.Size = new System.Drawing.Size(241, 56);
+            this.InfillDensityTrackBar.Size = new System.Drawing.Size(242, 56);
             this.InfillDensityTrackBar.TabIndex = 15;
             this.InfillDensityTrackBar.TickFrequency = 10;
             this.InfillDensityTrackBar.Value = global::RhinoSlic3r.Properties.Settings.Default.InfillDensity;
@@ -266,7 +266,7 @@
             this.SupportCheckBox.AutoSize = true;
             this.SupportCheckBox.Checked = global::RhinoSlic3r.Properties.Settings.Default.Support;
             this.SupportCheckBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::RhinoSlic3r.Properties.Settings.Default, "Support", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.SupportCheckBox.Location = new System.Drawing.Point(193, 64);
+            this.SupportCheckBox.Location = new System.Drawing.Point(194, 64);
             this.SupportCheckBox.Name = "SupportCheckBox";
             this.SupportCheckBox.Size = new System.Drawing.Size(87, 21);
             this.SupportCheckBox.TabIndex = 9;
@@ -281,7 +281,7 @@
             this.SettingsComboBox.FormattingEnabled = true;
             this.SettingsComboBox.Location = new System.Drawing.Point(131, 4);
             this.SettingsComboBox.Name = "SettingsComboBox";
-            this.SettingsComboBox.Size = new System.Drawing.Size(265, 24);
+            this.SettingsComboBox.Size = new System.Drawing.Size(266, 24);
             this.SettingsComboBox.TabIndex = 4;
             this.SettingsComboBox.Text = global::RhinoSlic3r.Properties.Settings.Default.PrintSettings;
             this.SettingsComboBox.DropDown += new System.EventHandler(this.SettingsComboBox_DropDown);
@@ -319,7 +319,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.SliceItButton);
             this.Name = "RhinoSlic3rUserControl";
-            this.Size = new System.Drawing.Size(399, 300);
+            this.Size = new System.Drawing.Size(400, 300);
             this.Load += new System.EventHandler(this.RhinoSlic3rUserControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.InfillDensityUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.LayerHeightNumericUpDown)).EndInit();

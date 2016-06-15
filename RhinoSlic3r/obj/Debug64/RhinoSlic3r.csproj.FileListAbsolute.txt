@@ -12,3 +12,7 @@ C:\Kinematiq\PROJETS\RHINOSLIC3R\V0\RhinoSlic3r\obj\Debug64\RhinoSlic3r.RhinoSli
 C:\Kinematiq\PROJETS\RHINOSLIC3R\V0\RhinoSlic3r\obj\Debug64\RhinoSlic3r.csproj.GenerateResource.Cache
 C:\Kinematiq\PROJETS\RHINOSLIC3R\V0\RhinoSlic3r\obj\Debug64\RhinoSlic3r.Properties.Resources.resources
 C:\Kinematiq\PROJETS\RHINOSLIC3R\V0\RhinoSlic3r\bin\RhinoSlic3r.dll.config
+C:\Kinematiq\PROJETS\RHINOSLIC3R\RhinoSlic3r\RhinoSlic3r\bin\RhinoSlic3r.dll.config
+C:\Kinematiq\PROJETS\RHINOSLIC3R\RhinoSlic3r\RhinoSlic3r\obj\Debug64\RhinoSlic3r.Properties.Resources.resources
+C:\Kinematiq\PROJETS\RHINOSLIC3R\RhinoSlic3r\RhinoSlic3r\obj\Debug64\RhinoSlic3r.RhinoSlic3rUserControl.resources
+C:\Kinematiq\PROJETS\RHINOSLIC3R\RhinoSlic3r\RhinoSlic3r\obj\Debug64\RhinoSlic3r.csproj.GenerateResource.Cache

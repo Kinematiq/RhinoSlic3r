@@ -151,78 +151,14 @@ namespace RhinoSlic3r
                 proc.WaitForExit();
 
                 //Read Gcode and create polyline
-                String Gcode = strFileName.Substring(0, strFileName.Length - 3) + "gcode";
-
-                    int LineN = 0;
-                    List<string> LineList = new List<string>();
-                    LineList = File.ReadLines(Gcode).ToList();
-
-                    System.Text.RegularExpressions.Regex regX = new System.Text.RegularExpressions.Regex("(?<=X)(.\\d*).\\d*");
-                    System.Text.RegularExpressions.Regex regY = new System.Text.RegularExpressions.Regex("(?<=Y)(.\\d*).\\d*");
-                    System.Text.RegularExpressions.Regex regZ = new System.Text.RegularExpressions.Regex("(?<=Z)(.\\d*).\\d*");
-
-                    Point3d point = new Point3d();
-                    Rhino.Collections.Point3dList points = new Rhino.Collections.Point3dList();
-
-                //Parse GCode line to construct points
-                for (LineN = 0; LineN < LineList.Count; LineN++)
-                    {
-                        if (LineList[LineN].StartsWith("G0 ") || LineList[LineN].StartsWith("G1 ") || LineList[LineN].StartsWith("G2 ") || LineList[LineN].StartsWith("G3 ")) 
-                        {
-                            if (regX.Match(LineList[LineN]).Success)
-                            {
-                                point.X = double.Parse(regX.Match(LineList[LineN]).ToString(), NumberStyles.Any, CultureInfo.InvariantCulture);
-                            }
-                            if (regY.Match(LineList[LineN]).Success)
-                            {
-                                point.Y = double.Parse(regY.Match(LineList[LineN]).ToString(), NumberStyles.Any, CultureInfo.InvariantCulture);
-                            }
-                            if (regZ.Match(LineList[LineN]).Success)
-                            {
-                                point.Z = double.Parse(regZ.Match(LineList[LineN]).ToString(), NumberStyles.Any, CultureInfo.InvariantCulture);
-                            }
-                        
-                        points.Add(point);
-                        }
-                    }
-
-                    //Remove first and last 0,0,0 points
-                points.RemoveAt(0);
-                points.RemoveAt(0);
-                points.RemoveAt(0);
-
-                //Make a curve form the list of points
-                Rhino.Geometry.NurbsCurve nc = Rhino.Geometry.NurbsCurve.Create(false, 1, points);
-                nc.Translate(0, 0, bBox.Min.Z);
-                if (nc != null && nc.IsValid)
-                {
-                    //Add a GCode layer to the model
-                    Rhino.DocObjects.ObjectAttributes att = doc.CreateDefaultAttributes();
-                    dynamic layer_index = doc.Layers.Find("GCode", true);
-                    if (layer_index > 0)
-                    {
-                        doc.Layers.Purge(layer_index, true);
-                        layer_index = doc.Layers.Add("GCode", System.Drawing.Color.Red);
-                    }
-                    else
-                    {
-                        layer_index = doc.Layers.Add("GCode", System.Drawing.Color.Red);
-                    }
-                    att.LayerIndex = layer_index;
-                    att.ColorSource = Rhino.DocObjects.ObjectColorSource.ColorFromLayer;
-
-                    if (doc.Objects.AddCurve(nc,att) != Guid.Empty)
-                    {
-                        doc.Views.Redraw();
-                    }
-                }
-
+                ReadGcode(strFileName.Substring(0, strFileName.Length - 3) + "gcode");
+                
                 //Open Gcode folder
                 Process.Start(@"C:\Kinematiq\RhinoSlic3r\Temp\");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message + ex.TargetSite);
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -310,72 +246,166 @@ namespace RhinoSlic3r
         //Read Gcode and create polyline
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
-            String Gcode = OpenGcodeFileDialog.FileName;
+            ReadGcode(OpenGcodeFileDialog.FileName);          
+        }
 
-            dynamic LineN = 0;
+        //GCodeReader
+        void ReadGcode(string Gcode)
+        {
+            try
+            { 
+            int LineN = 0;
             List<string> LineList = new List<string>();
             LineList = File.ReadLines(Gcode).ToList();
+            double EAct = 0;
+            double ELine = 0;
+            bool Ext = false;
+            bool go = false;
+
+            Rhino.DocObjects.ObjectAttributes att = RhinoDoc.ActiveDoc.CreateDefaultAttributes();
+            Rhino.Geometry.NurbsCurve nc = null;
 
             System.Text.RegularExpressions.Regex regX = new System.Text.RegularExpressions.Regex("(?<=X)(.\\d*).\\d*");
             System.Text.RegularExpressions.Regex regY = new System.Text.RegularExpressions.Regex("(?<=Y)(.\\d*).\\d*");
             System.Text.RegularExpressions.Regex regZ = new System.Text.RegularExpressions.Regex("(?<=Z)(.\\d*).\\d*");
+            System.Text.RegularExpressions.Regex regE = new System.Text.RegularExpressions.Regex("(?<=E)(.\\d*).\\d*");
 
             Point3d point = new Point3d();
-            Rhino.Collections.Point3dList points = new Rhino.Collections.Point3dList();
+            List<Point3d> pointsExt = new List<Point3d>();
+            List<Point3d> pointsNotExt = new List<Point3d>();
+
+            //Add a GCode layer to the model
+            int layer_index = RhinoDoc.ActiveDoc.Layers.Find("Gcode", true);
+            if (layer_index > 0)
+            {
+                RhinoDoc.ActiveDoc.Layers.Purge(layer_index, true);
+                layer_index = RhinoDoc.ActiveDoc.Layers.Add("Gcode", System.Drawing.Color.Black);
+            }
+            else
+            {
+                layer_index = RhinoDoc.ActiveDoc.Layers.Add("Gcode", System.Drawing.Color.Black);
+            }
+
+            //Add Group
+            Rhino.RhinoDoc.ActiveDoc.Groups.Add("Gcode");
+
+            //Know if first move extrude
+            while (go == false)
+            {
+                LineN = LineN + 1;
+
+                if (LineList[LineN].StartsWith("G"))
+                {
+                    if (regX.Match(LineList[LineN]).Success)
+                    {
+                        point.X = double.Parse(regX.Match(LineList[LineN]).ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture);
+                    }
+                    if (regY.Match(LineList[LineN]).Success)
+                    {
+                        point.Y = double.Parse(regY.Match(LineList[LineN]).ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture);
+                    }
+                    if (regZ.Match(LineList[LineN]).Success)
+                    {
+                        point.Z = double.Parse(regZ.Match(LineList[LineN]).ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture);
+                    }
+                    if (regE.Match(LineList[LineN]).Success)
+                    {
+                        ELine = double.Parse(regE.Match(LineList[LineN]).ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture);
+                    }
+                    if (point.X != 0 & point.Y != 0 & point.Z != 0)
+                    {
+                        go = true;
+                        if (ELine > EAct)
+                        {
+                            Ext = true;
+                        }
+                        else
+                        {
+                            Ext = false;
+                        }
+                    }
+                }
+            }
 
             //Read GCode line to construct points
             for (LineN = 0; LineN < LineList.Count; LineN++)
             {
-                if (LineList[LineN].StartsWith("G0 ") || LineList[LineN].StartsWith("G1 ") || LineList[LineN].StartsWith("G2 ") || LineList[LineN].StartsWith("G3 "))
+                if (LineList[LineN].StartsWith("G"))
                 {
                     if (regX.Match(LineList[LineN]).Success)
                     {
-                        point.X = double.Parse(regX.Match(LineList[LineN]).ToString(), NumberStyles.Any, CultureInfo.InvariantCulture);
+                        point.X = double.Parse(regX.Match(LineList[LineN]).ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture);
                     }
                     if (regY.Match(LineList[LineN]).Success)
                     {
-                        point.Y = double.Parse(regY.Match(LineList[LineN]).ToString(), NumberStyles.Any, CultureInfo.InvariantCulture);
+                        point.Y = double.Parse(regY.Match(LineList[LineN]).ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture);
                     }
                     if (regZ.Match(LineList[LineN]).Success)
                     {
-                        point.Z = double.Parse(regZ.Match(LineList[LineN]).ToString(), NumberStyles.Any, CultureInfo.InvariantCulture);
+                        point.Z = double.Parse(regZ.Match(LineList[LineN]).ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture);
                     }
-
-                    points.Add(point);
+                    if (regE.Match(LineList[LineN]).Success)
+                    {
+                        ELine = double.Parse(regE.Match(LineList[LineN]).ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture);
+                    }
+                    if (point.X != 0 & point.Y != 0 & point.Z != 0)
+                    {
+                        if (ELine <= EAct)
+                        {
+                            if (Ext)
+                            {
+                                pointsNotExt.Insert(0, pointsExt[pointsExt.Count - 1]);
+                                pointsExt = (Rhino.Geometry.Point3d.CullDuplicates(pointsExt, 0.1)).ToList();
+                                //Make a curve from the list of points
+                                nc = Rhino.Geometry.NurbsCurve.Create(false, 1, pointsExt);
+                                if (nc != null && nc.IsValid)
+                                {
+                                    att.LayerIndex = layer_index;
+                                    att.ColorSource = Rhino.DocObjects.ObjectColorSource.ColorFromLayer;
+                                        att.ObjectColor = System.Drawing.Color.Black;
+                                        att.AddToGroup(Rhino.RhinoDoc.ActiveDoc.Groups.Find("Gcode", true));
+                                    if (RhinoDoc.ActiveDoc.Objects.AddCurve(nc, att) != Guid.Empty)
+                                    {
+                                        Ext = false;
+                                        pointsExt.Clear();
+                                    }
+                                }
+                            }
+                            EAct = ELine;
+                            pointsNotExt.Add(point);
+                        }
+                        else
+                        {
+                            if (!Ext)
+                            {
+                                pointsExt.Insert(0, pointsNotExt[pointsNotExt.Count - 1]);
+                                pointsNotExt = (Rhino.Geometry.Point3d.CullDuplicates(pointsNotExt, 0.1)).ToList();
+                                //Make a curve from the list of points
+                                nc = Rhino.Geometry.NurbsCurve.Create(false, 1, pointsNotExt);
+                                if (nc != null && nc.IsValid)
+                                {
+                                    att.LayerIndex = layer_index; att.ColorSource = Rhino.DocObjects.ObjectColorSource.ColorFromObject;
+                                    att.ObjectColor = System.Drawing.Color.Red;
+                                    att.AddToGroup(Rhino.RhinoDoc.ActiveDoc.Groups.Find("Gcode", true));
+                                    if (RhinoDoc.ActiveDoc.Objects.AddCurve(nc, att) != Guid.Empty)
+                                    {
+                                        Ext = true;
+                                        pointsNotExt.Clear();
+                                    }
+                                }
+                            }
+                            EAct = ELine;
+                            pointsExt.Add(point);
+                        }
+                    }
                 }
             }
-
-            //Remove first and last 0,0,0 points
-            points.RemoveAt(0);
-            points.RemoveAt(0);
-            points.RemoveAt(0);
-
-            //Make a curve form the list of points
-            Rhino.Geometry.NurbsCurve nc = Rhino.Geometry.NurbsCurve.Create(false, 1, points);
-            if (nc != null && nc.IsValid)
+            RhinoDoc.ActiveDoc.Views.Redraw();
+            }
+            catch (Exception ex)
             {
-                //Add a GCode layer to the model
-                Rhino.DocObjects.ObjectAttributes att = RhinoDoc.ActiveDoc.CreateDefaultAttributes();
-                dynamic layer_index = RhinoDoc.ActiveDoc.Layers.Find("GCode", true);
-                if (layer_index > 0)
-                {
-                    RhinoDoc.ActiveDoc.Layers.Purge(layer_index, true);
-                    layer_index = RhinoDoc.ActiveDoc.Layers.Add("GCode", System.Drawing.Color.Red);
-                }
-                else
-                {
-                    layer_index = RhinoDoc.ActiveDoc.Layers.Add("GCode", System.Drawing.Color.Red);
-                }
-                att.LayerIndex = layer_index;
-                att.ColorSource = Rhino.DocObjects.ObjectColorSource.ColorFromLayer;
-
-                if (RhinoDoc.ActiveDoc.Objects.AddCurve(nc, att) != Guid.Empty)
-                {
-                    RhinoDoc.ActiveDoc.Views.Redraw();
-                }
+                MessageBox.Show(ex.Message);
             }
         }
-
-
     }
 }
