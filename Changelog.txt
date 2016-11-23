@@ -1,3 +1,7 @@
+V0.2.2:
+Change of filename handling to avoid problemes with Slic3r filenames
+G-code path in Rhino is now at the object elevation
+
 V0.2.1:
 Bug correction on curve creation
 

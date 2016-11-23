@@ -14,6 +14,19 @@ using System.Globalization;
 
 namespace RhinoSlic3r
 {
+    ////WIP Custom display conduit for extruded material
+    //public class GcodeConduit : Rhino.Display.DisplayConduit
+    //{
+    //    Rhino.Display.CustomDisplay Display = new Rhino.Display.CustomDisplay(true);
+
+    //    public Rhino.Geometry.Mesh Mesh { get; set; }
+
+    //    protected override void PostDrawObjects(Rhino.Display.DrawEventArgs e)
+    //    {
+    //        if (e.)
+    //    }
+    //}
+
     [System.Runtime.InteropServices.Guid("b2c8a7d7-7227-454e-ba08-abf351cc1908")]
     public partial class RhinoSlic3rUserControl : UserControl
     {
@@ -57,7 +70,7 @@ namespace RhinoSlic3r
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                Rhino.RhinoApp.WriteLine(ex.Message);
             }
         }
 
@@ -96,17 +109,10 @@ namespace RhinoSlic3r
                     bBox.Union(bbObj); // union the object bounding box with the overall bounding box
                 }
                 Point3d centerpoint = bBox.Center;
+                double ZElevation = bBox.Min.Z;
 
-                //Get the current name
-                strFileName = RhinoDoc.ActiveDoc.Name;
-                if (strFileName.Length > 4)
-                {
-                    strFileName = @"C:\Kinematiq\RhinoSlic3r\Temp\" + strFileName.Substring(0, strFileName.Length - 4) + ".stl";
-                }
-                else
-                {
-                    strFileName = @"C:\Kinematiq\RhinoSlic3r\Temp\" + System.DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss") + ".stl";
-                }
+                //Set the filename
+                strFileName = @"C:\Kinematiq\RhinoSlic3r\Temp\" + System.DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss") + ".stl";
 
                 //Get STL settings
                 strSett = STLSettings();
@@ -159,14 +165,14 @@ namespace RhinoSlic3r
                 proc.WaitForExit();
 
                 //Read Gcode
-                ReadGcode(strFileName.Substring(0, strFileName.Length - 4) + ".gcode");
+                ReadGcode(strFileName.Substring(0, strFileName.Length - 4) + ".gcode", ZElevation);
 
                 //Open Gcode folder
                 Process.Start(@"C:\Kinematiq\RhinoSlic3r\Temp\");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                Rhino.RhinoApp.WriteLine(ex.Message);
             }
         }
 
@@ -252,11 +258,11 @@ namespace RhinoSlic3r
         }
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
-            ReadGcode(OpenGcodeFileDialog.FileName);
+            ReadGcode(OpenGcodeFileDialog.FileName, 0);
         }
 
         //GCodeReader
-        void ReadGcode(string Gcode)
+        void ReadGcode(string Gcode, double ZElevation)
         {
             try
             {
@@ -267,6 +273,7 @@ namespace RhinoSlic3r
                 double ELine = 0;
                 bool Ext = false;
                 bool go = false;
+                Transform Elevation = Rhino.Geometry.Transform.Translation(0,0,ZElevation);
 
                 Rhino.DocObjects.ObjectAttributes att = RhinoDoc.ActiveDoc.CreateDefaultAttributes();
                 Rhino.Geometry.NurbsCurve nc = null;
@@ -361,7 +368,7 @@ namespace RhinoSlic3r
                                 if (Ext)
                                 {
                                     pointsNotExt.Insert(0, pointsExt[pointsExt.Count - 1]);
-                                    //Make a curve from the list of points
+                                    //Make EXTRUDED curve from the list of points
                                     nc = Rhino.Geometry.NurbsCurve.Create(false, 1, pointsExt);
                                     if (nc != null && nc.IsValid)
                                     {
@@ -369,6 +376,7 @@ namespace RhinoSlic3r
                                         att.ColorSource = Rhino.DocObjects.ObjectColorSource.ColorFromLayer;
                                         att.ObjectColor = System.Drawing.Color.Black;
                                         att.AddToGroup(Rhino.RhinoDoc.ActiveDoc.Groups.Find("Gcode", true));
+                                        nc.Transform(Elevation);
                                         if (RhinoDoc.ActiveDoc.Objects.AddCurve(nc, att) != Guid.Empty)
                                         {
                                             //CreatePipe(nc);
@@ -385,13 +393,14 @@ namespace RhinoSlic3r
                                 if (!Ext)
                                 {
                                     pointsExt.Insert(0, pointsNotExt[pointsNotExt.Count - 1]);
-                                    //Make a curve from the list of points
+                                    //Make NON-EXTRUDED curve from the list of points
                                     nc = Rhino.Geometry.NurbsCurve.Create(false, 1, pointsNotExt);
                                     if (nc != null && nc.IsValid)
                                     {
                                         att.LayerIndex = layer_index; att.ColorSource = Rhino.DocObjects.ObjectColorSource.ColorFromObject;
                                         att.ObjectColor = System.Drawing.Color.Red;
                                         att.AddToGroup(Rhino.RhinoDoc.ActiveDoc.Groups.Find("Gcode", true));
+                                        nc.Transform(Elevation);
                                         if (RhinoDoc.ActiveDoc.Objects.AddCurve(nc, att) != Guid.Empty)
                                         {
                                             Ext = true;
@@ -404,16 +413,16 @@ namespace RhinoSlic3r
                             }
                         }
                     }
-                }
+                }     
                 RhinoDoc.ActiveDoc.Views.Redraw();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+               Rhino.RhinoApp.WriteLine(ex.Message);
             }
         }
 
-        //Create Pipe too slow!!!
+        //WIP Create Pipe too slow!!!
         void CreatePipe(NurbsCurve pipecurve)
         {
             try
@@ -428,7 +437,7 @@ namespace RhinoSlic3r
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                Rhino.RhinoApp.WriteLine(ex.Message);
             }
         }
     }

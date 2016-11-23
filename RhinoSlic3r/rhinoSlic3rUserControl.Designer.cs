@@ -148,7 +148,7 @@
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(247, 17);
             this.label10.TabIndex = 21;
-            this.label10.Text = "RhinoSlic3r V0.2.1 using Slic3r V1.2.9";
+            this.label10.Text = "RhinoSlic3r V0.2.2 using Slic3r V1.2.9";
             // 
             // OpenGcodeButton
             // 
